@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekosistem: Dunia Kecil yang Saling Terhubung</title>
+    <!-- Menggunakan font bergaya rounded dan playful -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Palette Warna Storybook */
+            --sage-green: #9CB49F;
+            --light-green: #D4E2D4;
+            --cream: #FDFBF7;
+            --soft-brown: #795C45;
+            --light-brown: #A88A75;
+            --sky-blue: #CDE8E9;
+            --warm-yellow: #FBECA4;
+            --text-main: #4A3B32;
+            --card-bg: #FFFCF5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--cream);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, .brand-font {
+            font-family: 'Fredoka', sans-serif;
+            color: var(--soft-brown);
+        }
+
+        /* --- Animasi Global --- */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes drift {
+            from { transform: translateX(-10vw); }
+            to { transform: translateX(110vw); }
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        @keyframes flutter {
+            0%, 100% { transform: scaleY(1) rotate(0deg); }
+            50% { transform: scaleY(0.6) rotate(-10deg) translateY(-5px); }
+        }
+
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Dekorasi Background --- */
+        .particle {
+            position: absolute;
+            background: var(--warm-yellow);
+            border-radius: 50%;
+            opacity: 0.6;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* --- Navigasi --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(253, 251, 247, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px dashed var(--light-green);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--sage-green);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--soft-brown);
+            font-weight: 600;
+            margin-left: 30px;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--sage-green);
+        }
+
+        .btn-primary {
+            background-color: var(--sage-green);
+            color: white;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 30px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 6px 0 var(--soft-brown);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:active {
+            transform: translateY(6px);
+            box-shadow: 0 0px 0 var(--soft-brown);
+        }
+
+        /* --- Section 1: Hero --- */
+        #hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 100px 20px;
+            background: linear-gradient(to bottom, var(--sky-blue) 0%, var(--cream) 100%);
+            overflow: hidden;
+        }
+
+        .hero-content {
+            z-index: 10;
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            color: var(--soft-brown);
+            line-height: 1.2;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0px white;
+        }
+
+        .hero-desc {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            color: var(--text-main);
+        }
+
+        /* Landscape Storybook di Hero */
+        .landscape-container {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40vh;
+            pointer-events: none;
+        }
+
+        .hill {
+            position: absolute;
+            bottom: -50px;
+            width: 150vw;
+            height: 300px;
+            border-radius: 50%;
+            background-color: var(--sage-green);
+        }
+        .hill-bg {
+            background-color: var(--light-green);
+            left: -20vw;
+            bottom: 0px;
+            height: 400px;
+            z-index: 1;
+        }
+        .hill-fg {
+            left: -10vw;
+            z-index: 2;
+        }
+
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 50px;
+            opacity: 0.8;
+            animation: drift linear infinite;
+        }
+        .cloud::before, .cloud::after {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+        }
+        .cloud1 { width: 120px; height: 40px; top: 15%; left: -150px; animation-duration: 40s; }
+        .cloud1::before { width: 60px; height: 60px; top: -30px; left: 15px; }
+        .cloud1::after { width: 40px; height: 40px; top: -20px; right: 15px; }
+        
+        .cloud2 { width: 80px; height: 30px; top: 30%; left: -100px; animation-duration: 60s; opacity: 0.5; }
+        .cloud2::before { width: 40px; height: 40px; top: -20px; left: 10px; }
+
+        .sun {
+            position: absolute;
+            top: 15%;
+            right: 15%;
+            width: 80px;
+            height: 80px;
+            background: var(--warm-yellow);
+            border-radius: 50%;
+            box-shadow: 0 0 40px var(--warm-yellow);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .butterfly {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 4s ease-in-out infinite, flutter 0.5s infinite;
+            z-index: 5;
+        }
+
+        /* --- General Section Style --- */
+        section {
+            padding: 100px 5vw;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        .section-title::after {
+            content: '🍃';
+            display: block;
+            font-size: 1.5rem;
+            margin-top: 10px;
+        }
+
+        /* --- Section 2: Apa Itu Ekosistem --- */
+        .dua-kolom {
+            display: flex;
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .blob-card {
+            flex: 1;
+            min-width: 300px;
+            background: var(--card-bg);
+            padding: 40px;
+            /* Organic border radius for hand-drawn feel */
+            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+            border: 3px solid var(--soft-brown);
+            box-shadow: 8px 8px 0px var(--light-green);
+            transition: transform 0.3s;
+        }
+
+        .blob-card:hover {
+            transform: scale(1.02) rotate(-1deg);
+        }
+
+        .blob-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .blob-card ul {
+            list-style: none;
+            margin-top: 15px;
+        }
+        .blob-card ul li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        .blob-card ul li::before {
+            content: '✿';
+            color: var(--sage-green);
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        /* --- Section 3: Penghuni --- */
+        #penghuni {
+            background-color: var(--light-green);
+            position: relative;
+        }
+        /* Top and bottom wavy borders */
+        .wave-top {
+            position: absolute;
+            top: 0; left: 0; width: 100%; overflow: hidden; line-height: 0;
+        }
+        .wave-top svg { display: block; width: 100%; height: 50px; }
+
+        .kartu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .kartu-karakter {
+            background: white;
+            border: 2px dashed var(--soft-brown);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        .kartu-karakter:hover {
+            transform: translateY(-15px);
+            border-style: solid;
+            border-color: var(--sage-green);
+        }
+
+        .emoji-besar {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: float 5s ease-in-out infinite;
+        }
+
+        /* --- Section 4: Rantai Makanan --- */
+        #rantai-makanan {
+            background-color: var(--cream);
+            text-align: center;
+        }
+
+        .jalur-rantai {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 50px;
+        }
+
+        .item-rantai {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            transition: transform 0.3s;
+        }
+        .item-rantai:hover {
+            transform: scale(1.1);
+        }
+
+        .lingkaran-emoji {
+            width: 100px;
+            height: 100px;
+            background: var(--card-bg);
+            border-radius: 50%;
+            border: 3px solid var(--sage-green);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            box-shadow: 4px 4px 0 rgba(156, 180, 159, 0.3);
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        .panah-rantai {
+            color: var(--light-brown);
+            font-size: 2rem;
+            animation: sway 2s infinite;
+        }
+
+        .info-hover {
+            position: absolute;
+            bottom: -60px;
+            background: var(--soft-brown);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .item-rantai:hover .info-hover {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Section 5: Jaring Interaktif --- */
+        #koneksi {
+            background: linear-gradient(135deg, var(--sky-blue) 0%, var(--cream) 100%);
+            overflow: hidden;
+        }
+
+        .jaring-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 600px;
+            margin: 0 auto;
+        }
+
+        .node {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            border: 3px solid var(--soft-brown);
+            cursor: pointer;
+            transition: all 0.4s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .node span {
+            position: absolute;
+            bottom: -30px;
+            font-size: 1rem;
+            font-family: 'Fredoka', sans-serif;
+            color: var(--soft-brown);
+            background: rgba(255,255,255,0.8);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        /* Posisi Nodes melingkar */
+        .node.pusat { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px; font-size: 3.5rem; z-index: 10; border-color: var(--sage-green);}
+        .node.pusat:hover { transform: translate(-50%, -50%) scale(1.1); }
+        .node.n1 { top: 10%; left: 50%; transform: translateX(-50%); }
+        .node.n2 { top: 30%; right: 10%; }
+        .node.n3 { bottom: 20%; right: 20%; }
+        .node.n4 { bottom: 20%; left: 20%; }
+        .node.n5 { top: 30%; left: 10%; }
+
+        /* State interaktif */
+        .jaring-container.active .node {
+            opacity: 0.3;
+            filter: grayscale(80%);
+        }
+        .jaring-container.active .node.highlight,
+        .jaring-container.active .node:hover {
+            opacity: 1;
+            filter: grayscale(0%);
+            transform: scale(1.1);
+            border-color: var(--warm-yellow);
+            box-shadow: 0 0 20px var(--warm-yellow);
+        }
+        .node.pusat.highlight { transform: translate(-50%, -50%) scale(1.1); }
+
+        .instruksi-jaring {
+            text-align: center;
+            font-style: italic;
+            color: var(--light-brown);
+            margin-top: 20px;
+        }
+
+        /* --- Section 6: Bioma --- */
+        .bioma-grid {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--sage-green) var(--light-green);
+        }
+        .bioma-grid::-webkit-scrollbar { height: 8px; }
+        .bioma-grid::-webkit-scrollbar-track { background: var(--light-green); border-radius: 10px; }
+        .bioma-grid::-webkit-scrollbar-thumb { background-color: var(--sage-green); border-radius: 10px; }
+
+        .kartu-bioma {
+            min-width: 300px;
+            height: 400px;
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .kartu-bioma:hover { transform: translateY(-10px); }
+        
+        .kartu-bioma h3 { color: white; font-size: 2rem; margin-bottom: 10px; position: relative; z-index: 2;}
+        .kartu-bioma p { position: relative; z-index: 2; font-size: 0.95rem; }
+        .bioma-icon { position: absolute; top: -20px; right: -20px; font-size: 8rem; opacity: 0.3; z-index: 1; transition: all 0.5s;}
+        .kartu-bioma:hover .bioma-icon { transform: rotate(-15deg) scale(1.1); opacity: 0.5; }
+
+        .bg-hutan { background: linear-gradient(to bottom, #4CAF50, #2E7D32); }
+        .bg-laut { background: linear-gradient(to bottom, #4FC3F7, #0277BD); }
+        .bg-gurun { background: linear-gradient(to bottom, #FFD54F, #FF8F00); }
+        .bg-tawar { background: linear-gradient(to bottom, #81D4FA, #0097A7); }
+        .bg-tundra { background: linear-gradient(to bottom, #E0F7FA, #78909C); }
+
+        /* --- Section 7: Keseimbangan (Storytelling) --- */
+        #keseimbangan {
+            background-color: var(--light-green);
+            text-align: center;
+        }
+
+        .story-container {
+            background: white;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 30px;
+            padding: 50px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            border: 2px solid var(--sage-green);
+        }
+
+        .story-scene {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            font-size: 4rem;
+            margin: 40px 0;
+            transition: all 0.5s;
+        }
+
+        .story-text {
+            font-size: 1.2rem;
+            min-height: 80px;
+            transition: all 0.5s;
+        }
+
+        .toggle-keseimbangan {
+            background: transparent;
+            border: 2px solid var(--soft-brown);
+            color: var(--soft-brown);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-family: 'Fredoka', sans-serif;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .toggle-keseimbangan:hover {
+            background: var(--soft-brown);
+            color: white;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: var(--sage-green);
+            color: white;
+            text-align: center;
+            padding: 80px 20px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer h2 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        footer p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-landscape {
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: var(--text-main);
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            z-index: 1;
+            opacity: 0.1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.8rem; }
+            .nav-links { display: none; /* Simplifikasi mobile nav */ }
+            nav { justify-content: center; }
+            .dua-kolom { flex-direction: column; }
+            .story-scene { font-size: 3rem; gap: 15px; }
+            .node.pusat { width: 90px; height: 90px; font-size: 2.5rem; }
+            .node { width: 60px; height: 60px; font-size: 1.5rem; }
+            .node.n1 { top: 5%; }
+            .node.n3 { bottom: 10%; right: 10%; }
+            .node.n4 { bottom: 10%; left: 10%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigasi -->
+    <nav>
+        <a href="#" class="logo">🍄 Dunia Kecil</a>
+        <div class="nav-links">
+            <a href="#definisi">Apa itu?</a>
+            <a href="#penghuni">Penghuni</a>
+            <a href="#rantai-makanan">Rantai Makanan</a>
+            <a href="#bioma">Jelajahi</a>
+        </div>
+    </nav>
+
+    <!-- 1. Hero Section -->
+    <section id="hero">
+        <div class="sun"></div>
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div class="butterfly" style="top: 30%; left: 20%;">🦋</div>
+        <div class="butterfly" style="top: 25%; right: 25%; font-size: 1.5rem; animation-delay: 1s;">🦋</div>
+
+        <div class="hero-content scroll-reveal visible">
+            <h1 class="hero-title">Ekosistem:<br>Dunia Kecil yang Saling Terhubung</h1>
+            <p class="hero-desc">Temukan bagaimana tumbuhan, hewan, tanah, air, dan udara bekerja sama merangkai keajaiban untuk menjaga kehidupan di bumi.</p>
+            <a href="#definisi" class="btn-primary">Mulai Penjelajahan 🌿</a>
+        </div>
+
+        <!-- Ilustrasi Hutan Mini -->
+        <div class="landscape-container">
+            <div class="hill hill-bg"></div>
+            <div class="hill hill-fg">
+                <!-- Elemen dekoratif murni CSS/Emoji -->
+                <span style="position:absolute; bottom:60px; left:30%; font-size:3rem; animation: sway 4s infinite alternate; transform-origin: bottom center;">🌲</span>
+                <span style="position:absolute; bottom:50px; left:45%; font-size:2rem; animation: sway 3.5s infinite alternate; transform-origin: bottom center;">🌳</span>
+                <span style="position:absolute; bottom:30px; left:25%; font-size:1.5rem;">🍄</span>
+                <span style="position:absolute; bottom:70px; right:35%; font-size:4rem; animation: sway 5s infinite alternate; transform-origin: bottom center;">🌲</span>
+                <span style="position:absolute; bottom:40px; right:20%; font-size:1.5rem;">🐰</span>
+                <span style="position:absolute; bottom:20px; right:45%; font-size:1rem;">🌼</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Apa Itu Ekosistem? -->
+    <section id="definisi">
+        <h2 class="section-title scroll-reveal">Apa Itu Ekosistem?</h2>
+        <p style="text-align: center; max-width: 600px; margin: 0 auto 40px; font-size: 1.2rem;" class="scroll-reveal">
+            Bayangkan sebuah kota, tapi penduduknya adalah tumbuhan dan hewan, dan bangunannya terbuat dari alam. Ekosistem adalah sebuah rumah besar dimana makhluk hidup dan lingkungan tempat tinggalnya saling berinteraksi.
+        </p>
+        
+        <div class="dua-kolom">
+            <div class="blob-card scroll-reveal">
+                <h3>🌱 Komponen Biotik</h3>
+                <p>Ini adalah semua karakter yang <strong>hidup</strong> dan bernapas di dalam cerita kita. Mereka tumbuh, bergerak, dan berkembang biak.</p>
+                <ul>
+                    <li>Tumbuhan (Pohon, rumput, bunga)</li>
+                    <li>Hewan (Dari semut hingga gajah)</li>
+                    <li>Manusia</li>
+                    <li>Jamur dan Mikroorganisme tak kasat mata</li>
+                </ul>
+            </div>
+            
+            <div class="blob-card scroll-reveal" style="border-radius: 15px 225px 15px 255px/255px 15px 225px 15px; box-shadow: -8px 8px 0px var(--sky-blue);">
+                <h3>💧 Komponen Abiotik</h3>
+                <p>Ini adalah "panggung" tempat cerita berlangsung. Benda-benda <strong>tak hidup</strong> yang sangat penting agar kehidupan bisa bertahan.</p>
+                <ul>
+                    <li>Air dan Kelembapan</li>
+                    <li>Tanah dan Mineral</li>
+                    <li>Udara (Oksigen & Karbon Dioksida)</li>
+                    <li>Cahaya Matahari dan Suhu</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Kenali Penghuni Ekosistem -->
+    <section id="penghuni">
+        <!-- SVG Wave top -->
+        <div class="wave-top">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#FDFBF7"></path>
+            </svg>
+        </div>
+
+        <h2 class="section-title scroll-reveal" style="margin-top: 20px;">Kenali Para Penghuninya</h2>
+        
+        <div class="kartu-grid">
+            <div class="kartu-karakter scroll-reveal">
+                <div class="emoji-besar">🌻</div>
+                <h3 class="brand-font">Produsen</h3>
+                <p>Para koki ajaib di alam! Tumbuhan hijau yang bisa membuat makanannya sendiri hanya dengan bantuan cahaya matahari melalui proses fotosintesis.</p>
+            </div>
+            
+            <div class="kartu-karakter scroll-reveal" style="transition-delay: 0.1s;">
+                <div class="emoji-besar">🐇</div>
+                <h3 class="brand-font">Konsumen</h3>
+                <p>Para penjelajah rasa yang tidak bisa memasak sendiri. Mereka mendapatkan energi dengan memakan tumbuhan (herbivora) atau memakan hewan lain (karnivora).</p>
+            </div>
+            
+            <div class="kartu-karakter scroll-reveal" style="transition-delay: 0.2s;">
+                <div class="emoji-besar">🍄</div>
+                <h3 class="brand-font">Pengurai</h3>
+                <p>Pahlawan daur ulang rahasia. Jamur, cacing, dan bakteri yang bertugas membersihkan sisa makhluk hidup dan mengubahnya kembali menjadi nutrisi untuk tanah.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Perjalanan Energi -->
+    <section id="rantai-makanan">
+        <h2 class="section-title scroll-reveal">Perjalanan Energi (Rantai Makanan)</h2>
+        <p class="scroll-reveal">Energi tidak pernah hilang, ia hanya berpindah. Lihat bagaimana cahaya matahari berjalan dari satu makhluk ke makhluk lainnya!</p>
+
+        <div class="jalur-rantai scroll-reveal">
+            <div class="item-rantai">
+                <div class="lingkaran-emoji">☀️</div>
+                <div class="info-hover">Sumber utama energi</div>
+            </div>
+            <div class="panah-rantai">➜</div>
+            <div class="item-rantai">
+                <div class="lingkaran-emoji">🌱</div>
+                <div class="info-hover">Tumbuhan membuat makanan</div>
+            </div>
+            <div class="panah-rantai">➜</div>
+            <div class="item-rantai">
+                <div class="lingkaran-emoji">🦗</div>
+                <div class="info-hover">Belalang memakan daun</div>
+            </div>
+            <div class="panah-rantai">➜</div>
+            <div class="item-rantai">
+                <div class="lingkaran-emoji">🐸</div>
+                <div class="info-hover">Katak menangkap belalang</div>
+            </div>
+            <div class="panah-rantai">➜</div>
+            <div class="item-rantai">
+                <div class="lingkaran-emoji">🐍</div>
+                <div class="info-hover">Ular memakan katak</div>
+            </div>
+            <div class="panah-rantai">➜</div>
+            <div class="item-rantai">
+                <div class="lingkaran-emoji">🦅</div>
+                <div class="info-hover">Elang, predator puncak</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Semuanya Saling Terhubung -->
+    <section id="koneksi">
+        <h2 class="section-title scroll-reveal">Jaring Kehidupan</h2>
+        <p class="scroll-reveal" style="text-align: center; max-width: 600px; margin: 0 auto 30px;">
+            Di alam liar, menu makanan tidak sesederhana garis lurus. Semuanya membentuk jaring rumit yang saling bergantung. <br>
+            <strong>Coba klik salah satu penghuni di bawah ini!</strong>
+        </p>
+
+        <div class="jaring-container scroll-reveal" id="jaring">
+            <!-- Pusat -->
+            <div class="node pusat" data-koneksi="n1,n3,n4">🌳<span>Pohon</span></div>
+            <!-- Node sekeliling -->
+            <div class="node n1" data-koneksi="pusat,n2">🐦<span>Burung</span></div>
+            <div class="node n2" data-koneksi="n1,n4">🦅<span>Elang</span></div>
+            <div class="node n3" data-koneksi="pusat,n4">🍄<span>Jamur</span></div>
+            <div class="node n4" data-koneksi="pusat,n2,n3,n5">🐛<span>Serangga</span></div>
+            <div class="node n5" data-koneksi="n4">🐸<span>Katak</span></div>
+        </div>
+        <p class="instruksi-jaring">Klik ikon untuk melihat siapa yang terhubung dengannya.</p>
+    </section>
+
+    <!-- 6. Jelajahi Berbagai Ekosistem -->
+    <section id="bioma">
+        <h2 class="section-title scroll-reveal">Jelajahi Berbagai Buku Cerita Alam</h2>
+        
+        <div class="bioma-grid scroll-reveal">
+            <div class="kartu-bioma bg-hutan">
+                <div class="bioma-icon">🌲</div>
+                <h3>Hutan Hujan</h3>
+                <p>Rumah bagi jutaan spesies. Rimbun, lembap, dan selalu hijau. Paru-paru dunia kita.</p>
+            </div>
+            <div class="kartu-bioma bg-laut">
+                <div class="bioma-icon">🐋</div>
+                <h3>Laut Lepas</h3>
+                <p>Dunia biru yang luas. Penuh dengan terumbu karang indah, ikan warna-warni, dan paus raksasa.</p>
+            </div>
+            <div class="kartu-bioma bg-gurun">
+                <div class="bioma-icon">🌵</div>
+                <h3>Gurun Pasir</h3>
+                <p>Kering, panas di siang hari dan dingin di malam hari. Hanya yang tangguh yang bisa bertahan di sini.</p>
+            </div>
+            <div class="kartu-bioma bg-tawar">
+                <div class="bioma-icon">🪷</div>
+                <h3>Air Tawar</h3>
+                <p>Sungai dan danau yang tenang. Tempat berkumpulnya bebek, ikan air tawar, dan bunga teratai.</p>
+            </div>
+            <div class="kartu-bioma bg-tundra">
+                <div class="bioma-icon">❄️</div>
+                <h3>Tundra Es</h3>
+                <p>Daratan bersalju yang dingin sepanjang tahun. Rumah bagi beruang kutub dan serigala salju.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Ketika Keseimbangan Berubah -->
+    <section id="keseimbangan">
+        <h2 class="section-title scroll-reveal">Timbangan Alam yang Rapuh</h2>
+        
+        <div class="story-container scroll-reveal">
+            <h3 class="brand-font" style="font-size: 2rem; margin-bottom: 20px;">Kisah Hutan yang Seimbang</h3>
+            
+            <div class="story-scene" id="scene-visual">
+                <span class="anim-sway">🌧️</span> ➜ <span class="anim-sway" style="animation-delay: 0.5s;">🌱</span> ➜ <span class="anim-sway" style="animation-delay: 1s;">🦌</span>
+            </div>
+            
+            <p class="story-text" id="scene-text">
+                Saat hujan turun secukupnya, rumput tumbuh subur. Rusa memiliki banyak makanan, dan hutan dipenuhi dengan kehidupan yang bahagia dan seimbang.
+            </p>
+            
+            <button class="toggle-keseimbangan" id="btn-keseimbangan">Bagaimana jika terjadi kekeringan panjang?</button>
+        </div>
+    </section>
+
+    <!-- 8. Penutup -->
+    <footer>
+        <div class="footer-landscape"></div>
+        <h2 class="scroll-reveal">"Tidak ada yang hidup sendirian."</h2>
+        <p class="scroll-reveal">Setiap makhluk, sekecil apapun, memiliki peran ajaibnya sendiri dalam menjaga cerita kehidupan ini tetap berjalan.</p>
+        <a href="#hero" class="btn-primary scroll-reveal" style="background: var(--light-green); color: var(--text-main); margin-top: 20px;">Baca Kembali Ceritanya 📖</a>
+    </footer>
+
+    <!-- Script JavaScript Murni -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Scroll Reveal Animation
+            const revealElements = document.querySelectorAll('.scroll-reveal');
+            
+            const revealOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const revealObserver = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, revealOptions);
+
+            revealElements.forEach(el => revealObserver.observe(el));
+
+            // 2. Smooth Scrolling untuk navigasi
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // 3. Logika Jaring Kehidupan (Interactive Web)
+            const jaringContainer = document.getElementById('jaring');
+            const nodes = document.querySelectorAll('.node');
+
+            nodes.forEach(node => {
+                node.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Mencegah klik bubbling ke container
+                    
+                    // Reset semuanya dulu
+                    nodes.forEach(n => n.classList.remove('highlight'));
+                    
+                    // Aktifkan mode jaring (bikin yang lain redup)
+                    jaringContainer.classList.add('active');
+                    
+                    // Highlight node yang diklik
+                    node.classList.add('highlight');
+                    
+                    // Ambil daftar koneksi dari data atribut
+                    const koneksiStr = node.getAttribute('data-koneksi');
+                    if (koneksiStr) {
+                        const koneksiArr = koneksiStr.split(',');
+                        koneksiArr.forEach(idClass => {
+                            const connectedNode = document.querySelector(`.node.${idClass}`);
+                            if(connectedNode) {
+                                connectedNode.classList.add('highlight');
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Klik di luar node untuk mereset jaring
+            document.addEventListener('click', () => {
+                jaringContainer.classList.remove('active');
+                nodes.forEach(n => n.classList.remove('highlight'));
+            });
+
+            // 4. Logika Storytelling Keseimbangan
+            const btnKeseimbangan = document.getElementById('btn-keseimbangan');
+            const sceneVisual = document.getElementById('scene-visual');
+            const sceneText = document.getElementById('scene-text');
+            let isSeimbang = true;
+
+            btnKeseimbangan.addEventListener('click', () => {
+                if(isSeimbang) {
+                    // Berubah ke mode tidak seimbang (Kekeringan)
+                    sceneVisual.innerHTML = '<span style="opacity: 0.5;">☀️☀️</span> ➜ <span style="opacity: 0.5;">🥀</span> ➜ <span style="opacity: 0.5;">🦌❓</span>';
+                    sceneText.innerHTML = "Tanpa hujan, rumput mengering dan mati. Rusa kesulitan mencari makanan, dan seluruh penghuni hutan merasakan dampaknya. Kehilangan satu bagian kecil dapat mengubah keseluruhan cerita.";
+                    btnKeseimbangan.innerText = "Kembalikan keseimbangan (Turunkan Hujan)";
+                    btnKeseimbangan.style.background = "var(--soft-brown)";
+                    btnKeseimbangan.style.color = "white";
+                } else {
+                    // Kembali ke mode seimbang
+                    sceneVisual.innerHTML = '<span class="anim-sway">🌧️</span> ➜ <span class="anim-sway" style="animation-delay: 0.5s;">🌱</span> ➜ <span class="anim-sway" style="animation-delay: 1s;">🦌</span>';
+                    sceneText.innerHTML = "Saat hujan turun secukupnya, rumput tumbuh subur. Rusa memiliki banyak makanan, dan hutan dipenuhi dengan kehidupan yang bahagia dan seimbang.";
+                    btnKeseimbangan.innerText = "Bagaimana jika terjadi kekeringan panjang?";
+                    btnKeseimbangan.style.background = "transparent";
+                    btnKeseimbangan.style.color = "var(--soft-brown)";
+                }
+                isSeimbang = !isSeimbang;
+            });
+
+        });
+    </script>
+</body>
+</html>
